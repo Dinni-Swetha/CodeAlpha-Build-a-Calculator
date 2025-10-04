@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #1e1e1e;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .calculator {
+      background: #2b2b2b;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      width: 340px;
+    }
+
+    .display {
+      background: #000;
+      color: #0f0;
+      font-size: 30px;
+      text-align: right;
+      padding: 15px;
+      border-radius: 10px;
+      height: 60px;
+      overflow-x: auto;
+    }
+
+    .preview {
+      color: #ccc;
+      font-size: 16px;
+      text-align: right;
+      padding: 5px 10px;
+      height: 20px;
+      overflow-x: auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #3a3a3a;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #555;
+    }
+
+    .operator {
+      background-color: #f39c12;
+      color: #fff;
+    }
+
+    .operator:hover {
+      background-color: #e67e22;
+    }
+
+    .equal {
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    .equal:hover {
+      background-color: #27ae60;
+    }
+
+    .clear {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .clear:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator">
+  <div class="display" id="display">0</div>
+  <div class="preview" id="preview">Live Result</div>
+  <div class="buttons">
+    <button onclick="clearDisplay()" class="clear">C</button>
+    <button onclick="appendValue('(')">(</button>
+    <button onclick="appendValue(')')">)</button>
+    <button onclick="appendValue('/')" class="operator">÷</button>
+
+    <button onclick="appendValue('7')">7</button>
+    <button onclick="appendValue('8')">8</button>
+    <button onclick="appendValue('9')">9</button>
+    <button onclick="appendValue('*')" class="operator">×</button>
+
+    <button onclick="appendValue('4')">4</button>
+    <button onclick="appendValue('5')">5</button>
+    <button onclick="appendValue('6')">6</button>
+    <button onclick="appendValue('-')" class="operator">−</button>
+
+    <button onclick="appendValue('1')">1</button>
+    <button onclick="appendValue('2')">2</button>
+    <button onclick="appendValue('3')">3</button>
+    <button onclick="appendValue('+')" class="operator">+</button>
+
+    <button onclick="appendValue('0')">0</button>
+    <button onclick="appendValue('.')">.</button>
+    <button onclick="calculate()" class="equal">=</button>
+  </div>
+</div>
+
+<script>
+  const display = document.getElementById('display');
+  const preview = document.getElementById('preview');
+
+  function appendValue(value) {
+    if (display.innerText === '0' || display.innerText === 'Error') {
+      display.innerText = value;
+    } else {
+      display.innerText += value;
+    }
+    livePreview();
+  }
+
+  function clearDisplay() {
+    display.innerText = '0';
+    preview.innerText = 'Live Result';
+  }
+
+  function calculate() {
+    try {
+      const result = eval(display.innerText);
+      display.innerText = result;
+      preview.innerText = 'Live Result';
+    } catch {
+      display.innerText = 'Error';
+      preview.innerText = '';
+    }
+  }
+
+  function livePreview() {
+    try {
+      const result = eval(display.innerText);
+      preview.innerText = result;
+    } catch {
+      preview.innerText = '';
+    }
+  }
+
+  // ✅ Keyboard Support
+  document.addEventListener('keydown', function (e) {
+    const allowedKeys = '0123456789+-*/().';
+
+    if (allowedKeys.includes(e.key)) {
+      appendValue(e.key);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      calculate();
+    } else if (e.key === 'Backspace') {
+      let current = display.innerText;
+      display.innerText = current.length > 1 ? current.slice(0, -1) : '0';
+      livePreview();
+    } else if (e.key === 'Escape') {
+      clearDisplay();
+    }
+  });
+</script>
+
+</body>
+</html>
+
